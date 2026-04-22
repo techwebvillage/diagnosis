@@ -92,10 +92,23 @@ export default function PreviewPage() {
               </div>
 
               {/* メッセージ */}
-              <p className="text-center text-sm text-gray-600 mb-5 leading-relaxed">
+              <p className="text-center text-sm text-gray-600 mb-3 leading-relaxed">
                 あなたには<span className="font-bold text-navy">高いエンジニア適性</span>が確認されました。<br />
                 詳しい診断結果はLINEで受け取れます。
               </p>
+
+              {/* 手順説明 */}
+              <div className="bg-navy-light rounded-xl p-4 mb-5 text-sm text-gray-700 leading-relaxed">
+                <p className="font-bold text-navy mb-2">受け取り方</p>
+                <ol className="space-y-1 list-none">
+                  <li>① 下のボタンからLINE友だち追加</li>
+                  <li>② LINEに自分のタイプの英字を送信</li>
+                  <li className="text-xs text-gray-500 pl-3">
+                    （例：改善志向型なら「<span className="font-bold text-navy">I</span>」と送る）
+                  </li>
+                  <li>③ 結果URLが届きます</li>
+                </ol>
+              </div>
 
               {/* LINE ボタン */}
               <a
@@ -110,7 +123,7 @@ export default function PreviewPage() {
               </a>
 
               <p className="text-center text-xs text-gray-400 mt-3">
-                ※ 登録後すぐに結果が届きます
+                ※ タイプの英字：S / I / F / A
               </p>
             </>
           )}

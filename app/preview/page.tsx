@@ -62,6 +62,9 @@ export default function PreviewPage() {
                 <p className="text-base font-bold text-navy">
                   {TYPE_NAMES[result.type] ?? '診断タイプ'}
                 </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  タイプ英字：<span className="font-bold text-navy">{result.type}</span>
+                </p>
               </div>
 
               {/* スコア・詳細（ぼかし） */}
@@ -103,9 +106,6 @@ export default function PreviewPage() {
                 <ol className="space-y-1 list-none">
                   <li>① 下のボタンからLINE友だち追加</li>
                   <li>② LINEに自分のタイプの英字を送信</li>
-                  <li className="text-xs text-gray-500 pl-3">
-                    （例：改善志向型なら「<span className="font-bold text-navy">I</span>」と送る）
-                  </li>
                   <li>③ 結果URLが届きます</li>
                 </ol>
               </div>
@@ -122,9 +122,6 @@ export default function PreviewPage() {
                 LINEで結果を受け取る →
               </a>
 
-              <p className="text-center text-xs text-gray-400 mt-3">
-                ※ タイプの英字：S / I / F / A
-              </p>
             </>
           )}
         </div>

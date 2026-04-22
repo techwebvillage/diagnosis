@@ -6,13 +6,6 @@ import { useEffect, useState } from 'react'
 const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL ?? 'https://lin.ee/XXXXXXX'
 const STORAGE_KEY = 'quiz_result'
 
-const TYPE_NAMES: Record<string, string> = {
-  S: '積み上げ型エンジニアタイプ',
-  I: '改善志向型エンジニアタイプ',
-  F: '自由志向型エンジニアタイプ',
-  A: '成果実感型エンジニアタイプ',
-}
-
 type QuizResult = {
   type: string
   displayScore: number
@@ -56,18 +49,19 @@ export default function PreviewPage() {
             <div className="text-center text-gray-400 py-8">読み込み中...</div>
           ) : (
             <>
-              {/* タイプ名（公開） */}
-              <div className="bg-navy-light rounded-xl p-4 text-center mb-4">
-                <p className="text-xs text-gray-500 mb-1">あなたのタイプ</p>
-                <p className="text-base font-bold text-navy">
-                  {TYPE_NAMES[result.type] ?? '診断タイプ'}
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  タイプ英字：<span className="font-bold text-navy">{result.type}</span>
-                </p>
+              {/* タイプキー（大きく強調表示） */}
+              <div className="text-center mb-2">
+                <p className="text-xs text-gray-500 mb-2">あなたの診断タイプ</p>
+                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-navy text-white text-5xl font-bold shadow-lg">
+                  {result.type}
+                </div>
+                <p className="text-xs text-gray-400 mt-2">このアルファベットをLINEに送ってください</p>
               </div>
 
-              {/* スコア・詳細（ぼかし） */}
+              {/* 区切り */}
+              <div className="border-t border-gray-100 my-5" />
+
+              {/* ぼかしエリア */}
               <div className="relative mb-6">
                 <div className="select-none" style={{ pointerEvents: 'none' }}>
                   {/* スコア */}
@@ -79,34 +73,28 @@ export default function PreviewPage() {
                     </p>
                   </div>
 
-                  {/* 詳細プレビュー */}
-                  <div className="bg-navy-light rounded-xl p-4 text-center" style={{ filter: 'blur(4px)' }}>
-                    <p className="text-xs text-gray-500 mb-1">向いている職種・詳細説明</p>
-                    <p className="text-sm text-navy">Webエンジニア・〇〇エンジニア</p>
-                    <p className="text-xs text-gray-500 mt-1">あなたの強みと次のステップ...</p>
+                  {/* タイプ名・詳細 */}
+                  <div className="bg-navy-light rounded-xl p-4 text-center" style={{ filter: 'blur(6px)' }}>
+                    <p className="text-xs text-gray-500 mb-1">あなたのタイプ名・向いている職種</p>
+                    <p className="text-sm font-bold text-navy">〇〇型エンジニアタイプ</p>
+                    <p className="text-xs text-gray-500 mt-1">Webエンジニア・〇〇エンジニア...</p>
                   </div>
                 </div>
 
                 {/* オーバーレイ */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-xl">
-                  <p className="text-navy font-bold text-sm mb-1">🔒 LINE登録でスコア・詳細を公開</p>
-                  <p className="text-xs text-gray-500">向いている職種・次のステップ</p>
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/70 rounded-xl">
+                  <p className="text-navy font-bold text-sm mb-1">🔒 LINE登録後に公開</p>
+                  <p className="text-xs text-gray-500">スコア・タイプ名・向いている職種</p>
                 </div>
               </div>
-
-              {/* メッセージ */}
-              <p className="text-center text-sm text-gray-600 mb-3 leading-relaxed">
-                あなたには<span className="font-bold text-navy">高いエンジニア適性</span>が確認されました。<br />
-                詳しい診断結果はLINEで受け取れます。
-              </p>
 
               {/* 手順説明 */}
               <div className="bg-navy-light rounded-xl p-4 mb-5 text-sm text-gray-700 leading-relaxed">
                 <p className="font-bold text-navy mb-2">受け取り方</p>
                 <ol className="space-y-1 list-none">
                   <li>① 下のボタンからLINE友だち追加</li>
-                  <li>② LINEに自分のタイプの英字を送信</li>
-                  <li>③ 結果URLが届きます</li>
+                  <li>② LINEに上のアルファベット（<span className="font-bold text-navy">{result.type}</span>）を送信</li>
+                  <li>③ 診断結果URLが届きます</li>
                 </ol>
               </div>
 
@@ -121,7 +109,6 @@ export default function PreviewPage() {
               >
                 LINEで結果を受け取る →
               </a>
-
             </>
           )}
         </div>

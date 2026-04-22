@@ -28,7 +28,9 @@ export function calcAxisScores(answers: number[]): AxisScores {
 // 軸スコアからタイプを決定する（同点の場合は優先順位に従う）
 export function determineType(axisScores: AxisScores): DiagnosisType {
   const maxScore = Math.max(...Object.values(axisScores))
-  return TYPE_PRIORITY.find((axis) => axisScores[axis] === maxScore)!
+  const type = TYPE_PRIORITY.find((axis) => axisScores[axis] === maxScore)
+  if (!type) throw new Error(`determineType: no matching axis in scores ${JSON.stringify(axisScores)}`)
+  return type
 }
 
 // 回答配列から80〜100の範囲の表示スコアを算出する

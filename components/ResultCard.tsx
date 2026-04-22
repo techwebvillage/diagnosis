@@ -5,7 +5,7 @@ import type { DiagnosisType } from '@/lib/scoring'
 type TypeDefinition = {
   name: string
   englishName: string
-  catch: string
+  catchPhrase: string
   description: string
   roles: string[]
 }
@@ -14,7 +14,7 @@ const TYPE_DEFINITIONS: Record<DiagnosisType, TypeDefinition> = {
   S: {
     name: '積み上げ型エンジニアタイプ',
     englishName: 'Specialist Type',
-    catch: '専門性を武器にする、コツコツ成長型',
+    catchPhrase: '専門性を武器にする、コツコツ成長型',
     description:
       '異動のない環境でスキルを積み上げることにやりがいを感じやすいタイプ。知識が資産になる働き方と相性が良く、深い専門性を持つエンジニアとして活躍できます。',
     roles: ['Webエンジニア', 'インフラエンジニア', 'セキュリティエンジニア'],
@@ -22,7 +22,7 @@ const TYPE_DEFINITIONS: Record<DiagnosisType, TypeDefinition> = {
   I: {
     name: '改善志向型エンジニアタイプ',
     englishName: 'Improver Type',
-    catch: '仕組みを変えたい、課題解決型',
+    catchPhrase: '仕組みを変えたい、課題解決型',
     description:
       '業務の非効率や無駄に気づきやすく、仕組みを良くしたい気持ちが強いタイプ。現状に疑問を持ち改善策を考える姿勢はエンジニアの本質そのもの。システム開発やDX推進に適性があります。',
     roles: ['Webエンジニア', '業務システム開発', 'DX推進エンジニア'],
@@ -30,7 +30,7 @@ const TYPE_DEFINITIONS: Record<DiagnosisType, TypeDefinition> = {
   F: {
     name: '自由志向型エンジニアタイプ',
     englishName: 'Flexible Type',
-    catch: '場所も時間も、自分らしく働きたい型',
+    catchPhrase: '場所も時間も、自分らしく働きたい型',
     description:
       '場所や時間に縛られない働き方を重視するタイプ。リモートワーク中心のIT業界と相性が良く、自分のペースで高い成果を出せる環境で力を発揮できます。',
     roles: ['フリーランスエンジニア', 'フルリモート企業のエンジニア', 'Webエンジニア'],
@@ -38,7 +38,7 @@ const TYPE_DEFINITIONS: Record<DiagnosisType, TypeDefinition> = {
   A: {
     name: '成果実感型エンジニアタイプ',
     englishName: 'Achiever Type',
-    catch: '頑張りが報われる環境で、本気を出せる型',
+    catchPhrase: '頑張りが報われる環境で、本気を出せる型',
     description:
       '実力や努力が正当に評価される環境にモチベーションを感じるタイプ。成果が見えやすいIT業界と相性が良く、スキルを磨けば磨くほど市場価値が上がる仕事と言えます。',
     roles: ['スタートアップエンジニア', 'フリーランスエンジニア', '事業会社エンジニア'],
@@ -53,7 +53,7 @@ type Props = {
 
 export default function ResultCard({ type, displayScore, consultationUrl }: Props) {
   const def = TYPE_DEFINITIONS[type]
-  const scorePercent = ((displayScore - 80) / 20) * 100  // 80-100 → 0-100%
+  const scorePercent = Math.min(100, Math.max(0, ((displayScore - 80) / 20) * 100))  // 80-100 → 0-100%
 
   return (
     <div className="w-full">
@@ -72,7 +72,7 @@ export default function ResultCard({ type, displayScore, consultationUrl }: Prop
 
       {/* キャッチ */}
       <p className="text-center text-sm font-medium text-gray-600 mb-5 italic">
-        「{def.catch}」
+        「{def.catchPhrase}」
       </p>
 
       {/* スコアバー */}
@@ -98,9 +98,9 @@ export default function ResultCard({ type, displayScore, consultationUrl }: Prop
       <div className="mb-6">
         <p className="text-xs font-bold text-navy mb-2">向いている職種</p>
         <div className="flex flex-wrap gap-2">
-          {def.roles.map((role) => (
+          {def.roles.map((role, index) => (
             <span
-              key={role}
+              key={index}
               className="bg-navy-light text-navy text-xs px-3 py-1 rounded-full border border-navy/20"
             >
               {role}
@@ -114,6 +114,7 @@ export default function ResultCard({ type, displayScore, consultationUrl }: Prop
         href={consultationUrl}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="無料カウンセリングに申し込む（外部リンク）"
         className="block w-full bg-navy text-white text-center py-4 rounded-xl font-bold text-base hover:bg-navy/90 active:scale-95 transition-all"
       >
         無料カウンセリングに申し込む →

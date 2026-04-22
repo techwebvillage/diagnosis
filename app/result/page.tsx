@@ -4,8 +4,8 @@
 import type { DiagnosisType } from '@/lib/scoring'
 import ResultCard from '@/components/ResultCard'
 
-const CONSULTATION_URL =
-  process.env.NEXT_PUBLIC_CONSULTATION_URL ?? 'https://techvillage.jp/contact'
+const LINE_URL =
+  process.env.NEXT_PUBLIC_LINE_URL ?? 'https://lin.ee/XXXXXXX'
 
 const VALID_TYPES: DiagnosisType[] = ['S', 'I', 'F', 'A']
 const DEFAULT_TYPE: DiagnosisType = 'I'
@@ -48,7 +48,7 @@ export default async function ResultPage({ searchParams }: Props) {
           <ResultCard
             type={type}
             displayScore={displayScore}
-            consultationUrl={CONSULTATION_URL}
+            lineUrl={LINE_URL}
           />
         </div>
       </div>

@@ -46,25 +46,39 @@ export default function PreviewPage() {
             <div className="text-center text-gray-400 py-8">読み込み中...</div>
           ) : (
             <>
-              {/* アイコン */}
-              <div className="text-center text-5xl mb-4">🎯</div>
+              {/* ぼかしプレビューエリア */}
+              <div className="relative mb-6">
+                {/* ぼかしコンテンツ */}
+                <div className="select-none" style={{ filter: 'blur(6px)', pointerEvents: 'none' }}>
+                  {/* スコア */}
+                  <div className="text-center mb-4">
+                    <p className="text-sm text-gray-500 mb-1">エンジニア適性スコア</p>
+                    <p className="text-5xl font-bold text-navy">
+                      {result.displayScore}
+                      <span className="text-lg font-normal text-gray-400 ml-1">点</span>
+                    </p>
+                  </div>
 
-              {/* スコア */}
-              <div className="text-center mb-6">
-                <p className="text-sm text-gray-500 mb-1">エンジニア適性スコア</p>
-                <p className="text-5xl font-bold text-navy">
-                  {result.displayScore}
-                  <span className="text-lg font-normal text-gray-400 ml-1">点</span>
-                </p>
+                  {/* タイププレビュー */}
+                  <div className="bg-navy-light rounded-xl p-4 text-center">
+                    <p className="text-xs text-gray-500 mb-1">あなたのタイプ</p>
+                    <p className="text-base font-bold text-navy">〇〇志向型エンジニアタイプ</p>
+                    <p className="text-xs text-gray-500 mt-2">向いている職種・詳細説明あり</p>
+                  </div>
+                </div>
+
+                {/* オーバーレイ */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-xl">
+                  <p className="text-navy font-bold text-sm mb-1">🔒 LINE登録で全結果を公開</p>
+                  <p className="text-xs text-gray-500">タイプ・スコア・向いている職種</p>
+                </div>
               </div>
 
               {/* メッセージ */}
-              <div className="bg-navy-light rounded-xl p-4 mb-6 text-sm text-gray-700 leading-relaxed text-center">
-                あなたには<span className="font-bold text-navy">高いエンジニア適性</span>が確認されました。
-                <br />
-                詳しい診断結果（タイプ・向いている職種・次のステップ）は
-                LINE公式アカウントで受け取れます。
-              </div>
+              <p className="text-center text-sm text-gray-600 mb-5 leading-relaxed">
+                あなたには<span className="font-bold text-navy">高いエンジニア適性</span>が確認されました。<br />
+                詳しい診断結果はLINEで受け取れます。
+              </p>
 
               {/* LINE ボタン */}
               <a
@@ -75,7 +89,7 @@ export default function PreviewPage() {
                 className="block w-full text-center py-4 rounded-xl font-bold text-base text-white active:scale-95 transition-all"
                 style={{ backgroundColor: '#06c755' }}
               >
-                LINEで受け取る →
+                LINEで結果を受け取る →
               </a>
 
               <p className="text-center text-xs text-gray-400 mt-3">

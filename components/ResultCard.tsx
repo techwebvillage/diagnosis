@@ -48,10 +48,10 @@ const TYPE_DEFINITIONS: Record<DiagnosisType, TypeDefinition> = {
 type Props = {
   type: DiagnosisType
   displayScore: number
-  consultationUrl: string
+  lineUrl: string
 }
 
-export default function ResultCard({ type, displayScore, consultationUrl }: Props) {
+export default function ResultCard({ type, displayScore, lineUrl }: Props) {
   const def = TYPE_DEFINITIONS[type]
   const scorePercent = Math.min(100, Math.max(0, ((displayScore - 80) / 20) * 100))  // 80-100 → 0-100%
 
@@ -111,13 +111,14 @@ export default function ResultCard({ type, displayScore, consultationUrl }: Prop
 
       {/* CTA */}
       <a
-        href={consultationUrl}
+        href={lineUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="無料カウンセリングに申し込む（外部リンク）"
-        className="block w-full bg-navy text-white text-center py-4 rounded-xl font-bold text-base hover:bg-navy/90 active:scale-95 transition-all"
+        aria-label="LINE公式アカウントで詳しく確認する（外部リンク）"
+        className="block w-full text-center py-4 rounded-xl font-bold text-base text-white active:scale-95 transition-all"
+        style={{ backgroundColor: '#06c755' }}
       >
-        無料カウンセリングに申し込む →
+        LINE公式アカウントで確認する →
       </a>
     </div>
   )

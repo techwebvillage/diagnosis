@@ -17,7 +17,7 @@ export default function Home() {
           <p className="text-center text-gray-700 leading-relaxed mb-6">
             今のモヤモヤは、<br />
             <span className="font-bold text-navy">エンジニア適性のサイン</span>かもしれない。
-            <span className="block text-sm text-gray-400 mt-1">7問・約2分で診断できます</span>
+            <span className="block text-sm text-gray-400 mt-1">7問・約1分で診断できます</span>
           </p>
 
           <ul className="space-y-2 text-sm text-gray-600 mb-8">
@@ -42,7 +42,7 @@ export default function Home() {
             診断スタート →
           </Link>
 
-          <p className="text-center text-xs text-gray-400 mt-4">無料・登録不要</p>
+          <p className="text-center text-xs text-gray-400 mt-4">無料</p>
         </div>
       </div>
     </main>

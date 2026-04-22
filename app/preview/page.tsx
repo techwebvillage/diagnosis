@@ -49,11 +49,11 @@ export default function PreviewPage() {
               {/* ぼかしプレビューエリア */}
               <div className="relative mb-6">
                 {/* ぼかしコンテンツ */}
-                <div className="select-none" style={{ filter: 'blur(6px)', pointerEvents: 'none' }}>
+                <div className="select-none" style={{ pointerEvents: 'none' }}>
                   {/* スコア */}
                   <div className="text-center mb-4">
                     <p className="text-sm text-gray-500 mb-1">エンジニア適性スコア</p>
-                    <p className="text-5xl font-bold text-navy">
+                    <p className="text-5xl font-bold text-navy" style={{ filter: 'blur(10px)' }}>
                       {result.displayScore}
                       <span className="text-lg font-normal text-gray-400 ml-1">点</span>
                     </p>

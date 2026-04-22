@@ -6,7 +6,15 @@ import { useEffect, useState } from 'react'
 const LINE_URL = process.env.NEXT_PUBLIC_LINE_URL ?? 'https://lin.ee/XXXXXXX'
 const STORAGE_KEY = 'quiz_result'
 
+const TYPE_NAMES: Record<string, string> = {
+  S: '積み上げ型エンジニアタイプ',
+  I: '改善志向型エンジニアタイプ',
+  F: '自由志向型エンジニアタイプ',
+  A: '成果実感型エンジニアタイプ',
+}
+
 type QuizResult = {
+  type: string
   displayScore: number
 }
 
@@ -21,10 +29,12 @@ export default function PreviewPage() {
       if (
         typeof parsed === 'object' &&
         parsed !== null &&
-        typeof (parsed as QuizResult).displayScore === 'number'
+        typeof (parsed as QuizResult).displayScore === 'number' &&
+        typeof (parsed as QuizResult).type === 'string'
       ) {
         const score = (parsed as QuizResult).displayScore
-        setResult({ displayScore: Math.max(80, Math.min(100, score)) })
+        const type = (parsed as QuizResult).type
+        setResult({ type, displayScore: Math.max(80, Math.min(100, score)) })
       }
     } catch {
       sessionStorage.removeItem(STORAGE_KEY)
@@ -46,9 +56,16 @@ export default function PreviewPage() {
             <div className="text-center text-gray-400 py-8">読み込み中...</div>
           ) : (
             <>
-              {/* ぼかしプレビューエリア */}
+              {/* タイプ名（公開） */}
+              <div className="bg-navy-light rounded-xl p-4 text-center mb-4">
+                <p className="text-xs text-gray-500 mb-1">あなたのタイプ</p>
+                <p className="text-base font-bold text-navy">
+                  {TYPE_NAMES[result.type] ?? '診断タイプ'}
+                </p>
+              </div>
+
+              {/* スコア・詳細（ぼかし） */}
               <div className="relative mb-6">
-                {/* ぼかしコンテンツ */}
                 <div className="select-none" style={{ pointerEvents: 'none' }}>
                   {/* スコア */}
                   <div className="text-center mb-4">
@@ -59,18 +76,18 @@ export default function PreviewPage() {
                     </p>
                   </div>
 
-                  {/* タイププレビュー */}
-                  <div className="bg-navy-light rounded-xl p-4 text-center">
-                    <p className="text-xs text-gray-500 mb-1">あなたのタイプ</p>
-                    <p className="text-base font-bold text-navy">〇〇志向型エンジニアタイプ</p>
-                    <p className="text-xs text-gray-500 mt-2">向いている職種・詳細説明あり</p>
+                  {/* 詳細プレビュー */}
+                  <div className="bg-navy-light rounded-xl p-4 text-center" style={{ filter: 'blur(4px)' }}>
+                    <p className="text-xs text-gray-500 mb-1">向いている職種・詳細説明</p>
+                    <p className="text-sm text-navy">Webエンジニア・〇〇エンジニア</p>
+                    <p className="text-xs text-gray-500 mt-1">あなたの強みと次のステップ...</p>
                   </div>
                 </div>
 
                 {/* オーバーレイ */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-xl">
-                  <p className="text-navy font-bold text-sm mb-1">🔒 LINE登録で全結果を公開</p>
-                  <p className="text-xs text-gray-500">タイプ・スコア・向いている職種</p>
+                  <p className="text-navy font-bold text-sm mb-1">🔒 LINE登録でスコア・詳細を公開</p>
+                  <p className="text-xs text-gray-500">向いている職種・次のステップ</p>
                 </div>
               </div>
 

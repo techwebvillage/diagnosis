@@ -6,7 +6,7 @@ type Props = {
 }
 
 export default function ProgressBar({ current, total }: Props) {
-  const percentage = ((current - 1) / total) * 100
+  const percentage = (current / total) * 100
 
   return (
     <div className="w-full">

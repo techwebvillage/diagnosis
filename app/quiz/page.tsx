@@ -20,18 +20,27 @@ export default function QuizPage() {
 
     if (newAnswers.length === QUESTIONS.length) {
       // 全問完了: スコア計算して sessionStorage に保存
-      const axisScores = calcAxisScores(newAnswers)
-      const type = determineType(axisScores)
-      const displayScore = calcDisplayScore(newAnswers)
+      setAnswers(newAnswers)
+      try {
+        const axisScores = calcAxisScores(newAnswers)
+        const type = determineType(axisScores)
+        const displayScore = calcDisplayScore(newAnswers)
 
-      sessionStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ type, displayScore }),
-      )
+        try {
+          sessionStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify({ type, displayScore }),
+          )
+        } catch {
+          // プライベートブラウジングやクォータ超過時は無視し、/preview で null を処理する
+        }
+      } catch {
+        // determineType などが例外を投げた場合もデフォルト結果として /preview へ遷移
+      }
       router.push('/preview')
     } else {
       setAnswers(newAnswers)
-      setCurrentIndex(currentIndex + 1)
+      setCurrentIndex((prev) => prev + 1)
     }
   }
 

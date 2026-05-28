@@ -48,16 +48,36 @@ export function calcAxisAverages(answers: number[]): AxisScores {
   }
 }
 
-// 軸スコアからタイプを決定する（同点の場合は優先順位に従う）
-export function determineType(axisScores: AxisScores): DiagnosisType {
+// 回答合計点（0〜21）からタイプを振り分ける同点時のタイブレーカー
+// 全問同一回答などで最大軸が複数並ぶ場合に、回答の強度（全体的な肯定度）で分岐させる
+export function tieBreakerByRawTotal(rawTotal: number): DiagnosisType {
+  if (rawTotal >= 18) return 'A' // 全方位に強く反応＝成果志向
+  if (rawTotal >= 11) return 'S' // バランス良く反応＝積み上げ型
+  if (rawTotal >= 4) return 'I'  // 全体的に弱く反応＝現状への小さな疑問＝改善志向
+  return 'F'                     // 特定の志向なし＝縛られない自由型
+}
+
+// 軸スコアからタイプを決定する
+// 最大軸が複数並ぶ（タイ）場合、rawTotal が渡されていればそれで振り分け、
+// 渡されていなければ優先順位 (S > I > F > A) に従う
+export function determineType(axisScores: AxisScores, rawTotal?: number): DiagnosisType {
   const maxScore = Math.max(...Object.values(axisScores))
+  const tiedCount = Object.values(axisScores).filter((v) => v === maxScore).length
+  if (tiedCount > 1 && rawTotal !== undefined) {
+    return tieBreakerByRawTotal(rawTotal)
+  }
   const type = TYPE_PRIORITY.find((axis) => axisScores[axis] === maxScore)
   if (!type) throw new Error(`determineType: no matching axis in scores ${JSON.stringify(axisScores)}`)
   return type
 }
 
+// 回答配列の素点合計（0〜21）を返す
+export function calcRawTotal(answers: number[]): number {
+  return answers.reduce((sum, s) => sum + s, 0)
+}
+
 // 回答配列から80〜100の範囲の表示スコアを算出する
 export function calcDisplayScore(answers: number[]): number {
-  const rawTotal = answers.reduce((sum, s) => sum + s, 0)
+  const rawTotal = calcRawTotal(answers)
   return Math.round(SCORE_MIN + (rawTotal / RAW_MAX) * (SCORE_MAX - SCORE_MIN))
 }

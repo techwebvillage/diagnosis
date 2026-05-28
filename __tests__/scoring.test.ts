@@ -1,6 +1,13 @@
 // __tests__/scoring.test.ts
 
-import { calcAxisScores, calcAxisAverages, determineType, calcDisplayScore } from '../lib/scoring'
+import {
+  calcAxisScores,
+  calcAxisAverages,
+  calcRawTotal,
+  determineType,
+  calcDisplayScore,
+  tieBreakerByRawTotal,
+} from '../lib/scoring'
 import type { AxisScores } from '../lib/scoring'
 
 describe('calcAxisScores', () => {
@@ -100,6 +107,54 @@ describe('determineType', () => {
   test('F のみ最高の場合、F を返す', () => {
     const scores: AxisScores = { S: 2, I: 2, F: 9, A: 2 }
     expect(determineType(scores)).toBe('F')
+  })
+})
+
+describe('tieBreakerByRawTotal', () => {
+  test('18点以上は A', () => {
+    expect(tieBreakerByRawTotal(21)).toBe('A')
+    expect(tieBreakerByRawTotal(18)).toBe('A')
+  })
+  test('11〜17点は S', () => {
+    expect(tieBreakerByRawTotal(17)).toBe('S')
+    expect(tieBreakerByRawTotal(14)).toBe('S')
+    expect(tieBreakerByRawTotal(11)).toBe('S')
+  })
+  test('4〜10点は I', () => {
+    expect(tieBreakerByRawTotal(10)).toBe('I')
+    expect(tieBreakerByRawTotal(7)).toBe('I')
+    expect(tieBreakerByRawTotal(4)).toBe('I')
+  })
+  test('3点以下は F', () => {
+    expect(tieBreakerByRawTotal(3)).toBe('F')
+    expect(tieBreakerByRawTotal(0)).toBe('F')
+  })
+})
+
+describe('determineType with rawTotal tiebreaker', () => {
+  test('全問「よくある」(rawTotal=21) は A になる', () => {
+    const answers = [3, 3, 3, 3, 3, 3, 3]
+    const averages = calcAxisAverages(answers)
+    const rawTotal = calcRawTotal(answers)
+    expect(determineType(averages, rawTotal)).toBe('A')
+  })
+  test('全問「ときどきある」(rawTotal=14) は S になる', () => {
+    const answers = [2, 2, 2, 2, 2, 2, 2]
+    expect(determineType(calcAxisAverages(answers), calcRawTotal(answers))).toBe('S')
+  })
+  test('全問「あまりない」(rawTotal=7) は I になる', () => {
+    const answers = [1, 1, 1, 1, 1, 1, 1]
+    expect(determineType(calcAxisAverages(answers), calcRawTotal(answers))).toBe('I')
+  })
+  test('全問「ほとんどない」(rawTotal=0) は F になる', () => {
+    const answers = [0, 0, 0, 0, 0, 0, 0]
+    expect(determineType(calcAxisAverages(answers), calcRawTotal(answers))).toBe('F')
+  })
+  test('最大軸が一意の場合は rawTotal を渡してもその軸を返す', () => {
+    // F だけ高い → タイにならないので rawTotal は影響しない
+    const averages: AxisScores = { S: 1, I: 1, F: 3, A: 1 }
+    expect(determineType(averages, 21)).toBe('F')
+    expect(determineType(averages, 0)).toBe('F')
   })
 })
 

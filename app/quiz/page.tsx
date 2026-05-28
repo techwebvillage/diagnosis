@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { QUESTIONS } from '@/lib/questions'
-import { calcAxisAverages, determineType, calcDisplayScore } from '@/lib/scoring'
+import { calcAxisAverages, calcRawTotal, determineType, calcDisplayScore } from '@/lib/scoring'
 import ProgressBar from '@/components/ProgressBar'
 import QuizCard from '@/components/QuizCard'
 
@@ -23,7 +23,8 @@ export default function QuizPage() {
       setAnswers(newAnswers)
       try {
         const axisAverages = calcAxisAverages(newAnswers)
-        const type = determineType(axisAverages)
+        const rawTotal = calcRawTotal(newAnswers)
+        const type = determineType(axisAverages, rawTotal)
         const displayScore = calcDisplayScore(newAnswers)
 
         try {

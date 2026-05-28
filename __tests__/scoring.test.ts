@@ -5,12 +5,12 @@ import type { AxisScores } from '../lib/scoring'
 
 describe('calcAxisScores', () => {
   test('全問3点の場合、各軸に正しいスコアを集計する', () => {
-    // Q1:S=3, Q2:I=3, Q3:F=3, Q4:A=3, Q5:S=3, Q6:I=3, Q7:[S,A]=3
+    // Q1:S=3, Q2:I=3, Q3:F=3, Q4:A=3, Q5:S=3, Q6:I=3, Q7:[F,A]=3
     const answers = [3, 3, 3, 3, 3, 3, 3]
     const result = calcAxisScores(answers)
-    expect(result.S).toBe(9)  // Q1(3) + Q5(3) + Q7(3)
+    expect(result.S).toBe(6)  // Q1(3) + Q5(3)
     expect(result.I).toBe(6)  // Q2(3) + Q6(3)
-    expect(result.F).toBe(3)  // Q3(3)
+    expect(result.F).toBe(6)  // Q3(3) + Q7(3)
     expect(result.A).toBe(6)  // Q4(3) + Q7(3)
   })
 
@@ -24,12 +24,12 @@ describe('calcAxisScores', () => {
   })
 
   test('混合スコアを正しく集計する', () => {
-    // Q1:S=1, Q2:I=2, Q3:F=3, Q4:A=1, Q5:S=2, Q6:I=3, Q7:[S,A]=2
+    // Q1:S=1, Q2:I=2, Q3:F=3, Q4:A=1, Q5:S=2, Q6:I=3, Q7:[F,A]=2
     const answers = [1, 2, 3, 1, 2, 3, 2]
     const result = calcAxisScores(answers)
-    expect(result.S).toBe(5)  // Q1(1) + Q5(2) + Q7(2)
+    expect(result.S).toBe(3)  // Q1(1) + Q5(2)
     expect(result.I).toBe(5)  // Q2(2) + Q6(3)
-    expect(result.F).toBe(3)  // Q3(3)
+    expect(result.F).toBe(5)  // Q3(3) + Q7(2)
     expect(result.A).toBe(3)  // Q4(1) + Q7(2)
   })
 })
@@ -74,8 +74,7 @@ describe('calcAxisAverages', () => {
   })
 
   test('A が高ければ A が選ばれる', () => {
-    // Q4(A)=3、Q7(S+A)=3、他は0: 正規化前は S=3,I=0,F=0,A=6 → A
-    //                          正規化後も S=1,I=0,F=0,A=3 → A
+    // Q4(A)=3、Q7(F+A)=3、他は0: 正規化後は S=0, I=0, F=1.5, A=3 → A
     const answers = [0, 0, 0, 3, 0, 0, 3]
     const result = calcAxisAverages(answers)
     expect(determineType(result)).toBe('A')

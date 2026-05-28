@@ -54,6 +54,6 @@ export const QUESTIONS: Question[] = [
   {
     id: 7,
     text: '5年後・10年後も自分のスキルが市場で通用するか不安がある',
-    axis: ['S', 'A'],
+    axis: ['F', 'A'],
   },
 ]

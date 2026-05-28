@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { QUESTIONS } from '@/lib/questions'
-import { calcAxisScores, determineType, calcDisplayScore } from '@/lib/scoring'
+import { calcAxisAverages, determineType, calcDisplayScore } from '@/lib/scoring'
 import ProgressBar from '@/components/ProgressBar'
 import QuizCard from '@/components/QuizCard'
 
@@ -22,8 +22,8 @@ export default function QuizPage() {
       // 全問完了: スコア計算して sessionStorage に保存
       setAnswers(newAnswers)
       try {
-        const axisScores = calcAxisScores(newAnswers)
-        const type = determineType(axisScores)
+        const axisAverages = calcAxisAverages(newAnswers)
+        const type = determineType(axisAverages)
         const displayScore = calcDisplayScore(newAnswers)
 
         try {

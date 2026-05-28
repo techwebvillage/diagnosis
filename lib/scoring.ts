@@ -12,6 +12,18 @@ const SCORE_MIN = 80
 const SCORE_MAX = 100
 const RAW_MAX = 21 // 7問 × 3点
 
+// QUESTIONSから軸ごとの質問数を集計（複合軸は各軸で1カウント）
+const AXIS_COUNTS: AxisScores = QUESTIONS.reduce(
+  (acc, q) => {
+    const axes = Array.isArray(q.axis) ? q.axis : [q.axis]
+    axes.forEach((a) => {
+      acc[a] += 1
+    })
+    return acc
+  },
+  { S: 0, I: 0, F: 0, A: 0 } as AxisScores,
+)
+
 // 回答配列から各軸のスコアを集計する
 export function calcAxisScores(answers: number[]): AxisScores {
   const scores: AxisScores = { S: 0, I: 0, F: 0, A: 0 }
@@ -23,6 +35,17 @@ export function calcAxisScores(answers: number[]): AxisScores {
     })
   })
   return scores
+}
+
+// 軸ごとの質問数で割って平均スコアを算出する（軸あたりの質問数の偏りを吸収）
+export function calcAxisAverages(answers: number[]): AxisScores {
+  const sums = calcAxisScores(answers)
+  return {
+    S: AXIS_COUNTS.S > 0 ? sums.S / AXIS_COUNTS.S : 0,
+    I: AXIS_COUNTS.I > 0 ? sums.I / AXIS_COUNTS.I : 0,
+    F: AXIS_COUNTS.F > 0 ? sums.F / AXIS_COUNTS.F : 0,
+    A: AXIS_COUNTS.A > 0 ? sums.A / AXIS_COUNTS.A : 0,
+  }
 }
 
 // 軸スコアからタイプを決定する（同点の場合は優先順位に従う）

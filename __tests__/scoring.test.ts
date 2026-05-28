@@ -1,6 +1,6 @@
 // __tests__/scoring.test.ts
 
-import { calcAxisScores, determineType, calcDisplayScore } from '../lib/scoring'
+import { calcAxisScores, calcAxisAverages, determineType, calcDisplayScore } from '../lib/scoring'
 import type { AxisScores } from '../lib/scoring'
 
 describe('calcAxisScores', () => {
@@ -31,6 +31,54 @@ describe('calcAxisScores', () => {
     expect(result.I).toBe(5)  // Q2(2) + Q6(3)
     expect(result.F).toBe(3)  // Q3(3)
     expect(result.A).toBe(3)  // Q4(1) + Q7(2)
+  })
+})
+
+describe('calcAxisAverages', () => {
+  test('軸ごとの質問数で正規化された平均スコアを返す', () => {
+    // 全問3点: S=9/3, I=6/2, F=3/1, A=6/2 → すべて3.0
+    const answers = [3, 3, 3, 3, 3, 3, 3]
+    const result = calcAxisAverages(answers)
+    expect(result.S).toBeCloseTo(3)
+    expect(result.I).toBeCloseTo(3)
+    expect(result.F).toBeCloseTo(3)
+    expect(result.A).toBeCloseTo(3)
+  })
+
+  test('同一回答時に軸の質問数の偏りで S が有利にならない', () => {
+    // 全問2点: 正規化前は S=6,I=4,F=2,A=4（S偏重）だが、正規化後はすべて2.0で並ぶ
+    const answers = [2, 2, 2, 2, 2, 2, 2]
+    const result = calcAxisAverages(answers)
+    expect(result.S).toBeCloseTo(2)
+    expect(result.I).toBeCloseTo(2)
+    expect(result.F).toBeCloseTo(2)
+    expect(result.A).toBeCloseTo(2)
+  })
+
+  test('F が高くて他が中程度なら F が最大になる', () => {
+    // Q3(F)=3、他は1: 正規化前は S=3,I=2,F=3,A=2 で S と F 同点→S
+    //                正規化後は S=1,I=1,F=3,A=1 で F が明確に最大
+    const answers = [1, 1, 3, 1, 1, 1, 1]
+    const result = calcAxisAverages(answers)
+    expect(result.F).toBeGreaterThan(result.S)
+    expect(result.F).toBeGreaterThan(result.I)
+    expect(result.F).toBeGreaterThan(result.A)
+    expect(determineType(result)).toBe('F')
+  })
+
+  test('I が高ければ I が選ばれる', () => {
+    // Q2,Q6(I)=3、他は1: 正規化前は S=3,I=6,F=1,A=2 で I 勝ち（既に I 勝ちだが正規化後も維持）
+    const answers = [1, 3, 1, 1, 1, 3, 1]
+    const result = calcAxisAverages(answers)
+    expect(determineType(result)).toBe('I')
+  })
+
+  test('A が高ければ A が選ばれる', () => {
+    // Q4(A)=3、Q7(S+A)=3、他は0: 正規化前は S=3,I=0,F=0,A=6 → A
+    //                          正規化後も S=1,I=0,F=0,A=3 → A
+    const answers = [0, 0, 0, 3, 0, 0, 3]
+    const result = calcAxisAverages(answers)
+    expect(determineType(result)).toBe('A')
   })
 })
 
